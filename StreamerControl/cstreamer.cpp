@@ -103,7 +103,7 @@ bool CStreamer::MoveToRecord(size_t index)
 //----------------------------------------------------------------------------------------------------
 bool CStreamer::WriteToCassete(std::string &path)
 {
- std::string command=cCommand_WriteToCassete.Get()+" "+path;
+ std::string command=cCommand_WriteToCassete.Get()+" "+"\""+path+"\"";
  return(SendCommand(command));
 }
 //----------------------------------------------------------------------------------------------------
