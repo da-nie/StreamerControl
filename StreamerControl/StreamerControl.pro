@@ -40,7 +40,10 @@ SOURCES += \
     system/cthread.cpp \
     system/system.cpp \
     cstreamer.cpp \
-    ccommand.cpp
+    ccommand.cpp \
+    ccassete.cpp \
+    cfile.cpp \
+    crecord.cpp
 
 HEADERS += \
         cmainwindow.h \
@@ -48,7 +51,10 @@ HEADERS += \
     system/cthread.h \
     system/system.h \
     cstreamer.h \
-    ccommand.h
+    ccommand.h \
+    ccassete.h \
+    cfile.h \
+    crecord.h
 
 FORMS += \
         cmainwindow.ui
