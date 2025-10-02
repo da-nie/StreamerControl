@@ -130,4 +130,28 @@ void CRecord::SetState(CFile::STATE state)
  for(size_t n=0;n<FileList.size();n++) FileList[n].State=state;
  for(size_t n=0;n<RecordList.size();n++) RecordList[n].SetState(state);
 }
+//----------------------------------------------------------------------------------------------------
+//!отметить каталоги в которых есть отличающиеся элементы
+//----------------------------------------------------------------------------------------------------
+bool CRecord::MarkNotEuqivalentDirectory(void)
+{
+ bool not_equivalent=false;
+ for(size_t n=0;n<FileList.size();n++)
+ {
+  if (FileList[n].State!=CFile::STATE::STATE_EQUIVALENT)
+  {
+   not_equivalent=true;
+   break;
+  }
+ }
+ for(size_t n=0;n<RecordList.size();n++)
+ {
+  if (RecordList[n].MarkNotEuqivalentDirectory()==true) not_equivalent=true;
+ }
+ if (State==CFile::STATE::STATE_EQUIVALENT)
+ {
+  if (not_equivalent==true) State=CFile::STATE::STATE_DIRECTORY_NOT_EQUIVALENT;
+ }
+ return(not_equivalent);
+}
 

@@ -38,6 +38,7 @@ public:
  enum class STATE
  {
   STATE_EQUIVALENT,///<одинаковый
+  STATE_DIRECTORY_NOT_EQUIVALENT,///<разный (есть разница в содержимом каталогов)
   STATE_ONLY_IN_HDD,///<есть только на диске
   STATE_ONLY_IN_RECORD,///<есть только в записи
   STATE_LENGTH_ERROR///<разная длина файла

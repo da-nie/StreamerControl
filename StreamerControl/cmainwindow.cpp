@@ -45,6 +45,11 @@ CMainWindow::CMainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::CMainWi
  //настраиваем таблицы
  ui->qTableWidget_Cassete_Cassete->clearContents();
  ui->qTableWidget_Cassete_Cassete->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+ //настраиваем цвета
+ SetWidgetColor(ui->qLabel_DirerctoryNotEquivalent,GetColorForState(CFile::STATE::STATE_DIRECTORY_NOT_EQUIVALENT));
+ SetWidgetColor(ui->qLabel_LengthError,GetColorForState(CFile::STATE::STATE_LENGTH_ERROR));
+ SetWidgetColor(ui->qLabel_OnlyInHDD,GetColorForState(CFile::STATE::STATE_ONLY_IN_HDD));
+ SetWidgetColor(ui->qLabel_OnlyInRecord,GetColorForState(CFile::STATE::STATE_ONLY_IN_RECORD));
 
  LoadSettings();
  SetStreamerCommand();
@@ -61,15 +66,6 @@ CMainWindow::~CMainWindow()
 //закрытые функции
 //****************************************************************************************************
 
-//----------------------------------------------------------------------------------------------------
-//!задать цвет виджета
-//----------------------------------------------------------------------------------------------------
-void CMainWindow::SetWidgetColor(QWidget *qWidget_Ptr,const QColor &qColor)
-{
- QString str=QString("background-color: %1;").arg(qColor.name());
- if (str.isEmpty()) str+="\n";
- qWidget_Ptr->setStyleSheet(str);
-}
 //----------------------------------------------------------------------------------------------------
 //!выгрузить кассету
 //----------------------------------------------------------------------------------------------------
@@ -126,59 +122,6 @@ void CMainWindow::on_qPushButton_Cassete_AddRecordToCassete_clicked()
  AddRecordToCassete(std_path_name);
 }
 
-//----------------------------------------------------------------------------------------------------
-//!получить размер файла
-//----------------------------------------------------------------------------------------------------
-uint64_t CMainWindow::GetFileSize(const std::string &file_name)
-{
- //получаем параметры файла
- struct stat statbuf;
-
- int file_id=open(file_name.c_str(),O_RDWR);
- if (file_id<0) return(0);
-
- fstat(file_id,&statbuf);
-
- ::close(file_id);
-
- if (!(statbuf.st_mode&S_IFREG)) return(0);//это не файл
- return(statbuf.st_size);
-}
-//----------------------------------------------------------------------------------------------------
-//!сканировать каталог и добавить в запись
-//----------------------------------------------------------------------------------------------------
-void CMainWindow::AddPathToRecord(const std::string &path,const std::string &short_path,const std::string &path_name,CRecord &CRecord)
-{
- CRecord.Name=path_name;
- std::vector<std::string> vector_file_name;
- SYSTEM::CreateFileList(path,vector_file_name);
-
- //обходим директории
- std::vector<std::string> vector_directory_name;
- SYSTEM::CreateDirectoryList(path,vector_directory_name);
- CRecord.RecordList.clear();
- CRecord.RecordList.resize(vector_directory_name.size());
- for(size_t n=0;n<vector_directory_name.size();n++)
- {
-  std::string new_path=vector_directory_name[n]+SYSTEM::GetPathDivider();
-  AddPathToRecord(path+new_path,short_path+new_path,vector_directory_name[n],CRecord.RecordList[n]);
- }
-
- //переносим имена файлов текущей директории
- CRecord.FileList.clear();
- CRecord.FileList.reserve(vector_file_name.size());
- for(size_t n=0;n<vector_file_name.size();n++)
- {
-  std::string short_name=short_path+vector_file_name[n];
-  std::string full_name=path+vector_file_name[n];
-
-  CFile cFile;
-  cFile.FileName=vector_file_name[n];
-  cFile.FullFileName=short_name;
-  cFile.Size=GetFileSize(full_name);
-  CRecord.FileList.push_back(cFile);
- }
-}
 //----------------------------------------------------------------------------------------------------
 //!сохранить файл каталогов кассеты
 //----------------------------------------------------------------------------------------------------
@@ -501,10 +444,73 @@ void CMainWindow::on_qPushButton_Compare_clicked()
    if (find_cassete==false) AddFileToRecord(cFile_HDD,*cRecord_Output_Ptr,CFile::STATE::STATE_ONLY_IN_HDD);
   }
  }
-
+ //отметим каталоги в которые не одинаковы
+ cRecord_Output.MarkNotEuqivalentDirectory();
+ //обновляем список на экране
  UpdateRecordList(cRecord_Output);
 }
+//----------------------------------------------------------------------------------------------------
+//!задать цвет виджета
+//----------------------------------------------------------------------------------------------------
+void CMainWindow::SetWidgetColor(QWidget *qWidget_Ptr,const QColor &qColor)
+{
+ QString str=QString("background-color: %1;").arg(qColor.name());
+ if (str.isEmpty()) str+="\n";
+ qWidget_Ptr->setStyleSheet(str);
+}
+//----------------------------------------------------------------------------------------------------
+//!получить размер файла
+//----------------------------------------------------------------------------------------------------
+uint64_t CMainWindow::GetFileSize(const std::string &file_name)
+{
+ //получаем параметры файла
+ struct stat statbuf;
 
+ int file_id=open(file_name.c_str(),O_RDWR);
+ if (file_id<0) return(0);
+
+ fstat(file_id,&statbuf);
+
+ ::close(file_id);
+
+ if (!(statbuf.st_mode&S_IFREG)) return(0);//это не файл
+ return(statbuf.st_size);
+}
+//----------------------------------------------------------------------------------------------------
+//!сканировать каталог и добавить в запись
+//----------------------------------------------------------------------------------------------------
+void CMainWindow::AddPathToRecord(const std::string &path,const std::string &short_path,const std::string &path_name,CRecord &CRecord)
+{
+ CRecord.Name=path_name;
+ std::vector<std::string> vector_file_name;
+ SYSTEM::CreateFileList(path,vector_file_name);
+
+ //обходим директории
+ std::vector<std::string> vector_directory_name;
+ SYSTEM::CreateDirectoryList(path,vector_directory_name);
+ CRecord.RecordList.clear();
+ CRecord.RecordList.resize(vector_directory_name.size());
+ for(size_t n=0;n<vector_directory_name.size();n++)
+ {
+  std::string new_path=vector_directory_name[n]+SYSTEM::GetPathDivider();
+  AddPathToRecord(path+new_path,short_path+new_path,vector_directory_name[n],CRecord.RecordList[n]);
+ }
+
+ //переносим имена файлов текущей директории
+ CRecord.FileList.clear();
+ CRecord.FileList.reserve(vector_file_name.size());
+ for(size_t n=0;n<vector_file_name.size();n++)
+ {
+  std::string short_name=short_path+vector_file_name[n];
+  std::string full_name=path+vector_file_name[n];
+
+  CFile cFile;
+  cFile.FileName=vector_file_name[n];
+  cFile.FullFileName=short_name;
+  cFile.Size=GetFileSize(full_name);
+  CRecord.FileList.push_back(cFile);
+ }
+}
 //----------------------------------------------------------------------------------------------------
 //!добавить в запись файл
 //----------------------------------------------------------------------------------------------------
@@ -595,14 +601,6 @@ void CMainWindow::UpdateRecordList(const CRecord &cRecord)
 {
  ui->qTreeWidget_Cassete_Record->clear();
 
- auto set_color_function=[](CFile::STATE state,QTreeWidgetItem *item_ptr)
- {
-  if (state==CFile::STATE::STATE_EQUIVALENT) item_ptr->setBackgroundColor(0,QColor(255,255,255));
-  if (state==CFile::STATE::STATE_ONLY_IN_HDD) item_ptr->setBackgroundColor(0,QColor(192,255,255));
-  if (state==CFile::STATE::STATE_ONLY_IN_RECORD) item_ptr->setBackgroundColor(0,QColor(255,192,192));
-  if (state==CFile::STATE::STATE_LENGTH_ERROR) item_ptr->setBackgroundColor(0,QColor(255,255,192));
- };
-
  struct SVisit
  {
   const CRecord *cRecord_Ptr;
@@ -627,7 +625,7 @@ void CMainWindow::UpdateRecordList(const CRecord &cRecord)
   {
    sVisit.Item_Ptr=new QTreeWidgetItem(ui->qTreeWidget_Cassete_Record);
    sVisit.Item_Ptr->setText(0,sVisit.cRecord_Ptr->Name.c_str());
-   set_color_function(sVisit.cRecord_Ptr->State,sVisit.Item_Ptr);
+   sVisit.Item_Ptr->setBackgroundColor(0,GetColorForState(sVisit.cRecord_Ptr->State));
    //item->seticon(O, QPixmap(":/drive.bmp") );
   }
   //добавляем директории
@@ -638,7 +636,7 @@ void CMainWindow::UpdateRecordList(const CRecord &cRecord)
    SVisit sVisit_New;
    sVisit_New.Item_Ptr=item_ptr;
    sVisit_New.cRecord_Ptr=&sVisit.cRecord_Ptr->RecordList[n];
-   set_color_function(sVisit_New.cRecord_Ptr->State,item_ptr);
+   item_ptr->setBackgroundColor(0,GetColorForState(sVisit_New.cRecord_Ptr->State));
    deque_list.push_front(sVisit_New);   
   }
   //добавляем элементы директории
@@ -648,7 +646,7 @@ void CMainWindow::UpdateRecordList(const CRecord &cRecord)
 
    QTreeWidgetItem* item_ptr=new QTreeWidgetItem(sVisit.Item_Ptr);
    item_ptr->setText(0,cFile.FileName.c_str());
-   set_color_function(cFile.State,item_ptr);
+   item_ptr->setBackgroundColor(0,GetColorForState(cFile.State));
   }
  }
 
@@ -852,6 +850,18 @@ void CMainWindow::CreateRecord(const std::string &path,CRecord &cRecord)
  AddPathToRecord(std_path_name,short_path,record_path_name,cRecord);
 }
 
+//----------------------------------------------------------------------------------------------------
+//получить цвет для состояния
+//----------------------------------------------------------------------------------------------------
+QColor CMainWindow::GetColorForState(CFile::STATE state)
+{
+ if (state==CFile::STATE::STATE_EQUIVALENT) return(QColor(255,255,255));
+ if (state==CFile::STATE::STATE_DIRECTORY_NOT_EQUIVALENT) return(QColor(192,192,255));
+ if (state==CFile::STATE::STATE_ONLY_IN_HDD) return(QColor(192,255,255));
+ if (state==CFile::STATE::STATE_ONLY_IN_RECORD) return(QColor(255,192,192));
+ if (state==CFile::STATE::STATE_LENGTH_ERROR) return(QColor(255,255,192));
+ return(QColor(0,0,0));
+}
 //****************************************************************************************************
 //открытые функции
 //****************************************************************************************************

@@ -59,6 +59,7 @@ public:
  size_t GetSize(void) const;///<получить размер
  size_t GetTARSize(void) const;///<получить размер в несжатом TAR-архиве
  void SetState(CFile::STATE state);///<задать статус всей записи и её элементам
+ bool MarkNotEuqivalentDirectory(void);///<отметить каталоги в которых есть отличающиеся элементы
 private:
  //-закрытые функции-----------------------------------------------------------------------------------
 };

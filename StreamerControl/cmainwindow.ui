@@ -93,7 +93,7 @@
            </widget>
           </item>
           <item row="10" column="1">
-           <widget class="QLabel" name="qLabel_CasseteSize_2">
+           <widget class="QLabel" name="qLabel_CasseteText">
             <property name="frameShape">
              <enum>QFrame::Panel</enum>
             </property>
@@ -161,6 +161,69 @@
              <string>Считать каталог с кассеты</string>
             </property>
            </widget>
+          </item>
+          <item row="11" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="qLabel_DirerctoryNotEquivalent">
+              <property name="frameShape">
+               <enum>QFrame::WinPanel</enum>
+              </property>
+              <property name="text">
+               <string>Каталоги различны</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="qLabel_LengthError">
+              <property name="frameShape">
+               <enum>QFrame::WinPanel</enum>
+              </property>
+              <property name="text">
+               <string>Отличается размер файла</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="11" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLabel" name="qLabel_OnlyInRecord">
+              <property name="frameShape">
+               <enum>QFrame::WinPanel</enum>
+              </property>
+              <property name="text">
+               <string>Файл на кассете</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::AutoText</enum>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="qLabel_OnlyInHDD">
+              <property name="frameShape">
+               <enum>QFrame::WinPanel</enum>
+              </property>
+              <property name="text">
+               <string>Файл на диске</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>

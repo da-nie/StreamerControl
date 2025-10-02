@@ -69,6 +69,8 @@ class CMainWindow:public QMainWindow
   void SetWidgetColor(QWidget *qWidget_Ptr,const QColor &qColor);///<задать цвет виджета
   uint64_t GetFileSize(const std::string &file_name);///<получить размер файла
   void AddPathToRecord(const std::string &path,const std::string &short_path,const std::string &path_name,CRecord &cRecord);///<сканировать каталог и добавить в запись
+  void AddFileToRecord(CFile cFile,CRecord &cRecord,CFile::STATE state);///<добавить в запись файл
+  void AddSubRecord(const CRecord &CRecord_Input,CRecord &cRecord_Output,CFile::STATE state);///<добавить в запись подкаталог
   bool SaveCassete(const std::string &file_name,const CCassete &cCassete);///<сохранить кассету
   bool LoadCassete(const std::string &file_name,CCassete &cCassete);///<загрузить кассету
   void UpdateCasseteList(const CCassete &cCassete);///<обновить список записей кассеты на экране
@@ -78,8 +80,7 @@ class CMainWindow:public QMainWindow
   void LoadSettings(void);///<загрузить настройки
   void AddRecordToCassete(const std::string &path);///<добавление каталога в кассету
   void CreateRecord(const std::string &path,CRecord &cRecord);///<создание записи каталога
-  void AddFileToRecord(CFile cFile,CRecord &cRecord,CFile::STATE state);///<добавить в запись файл
-  void AddSubRecord(const CRecord &CRecord_Input,CRecord &cRecord_Output,CFile::STATE state);///<добавить в запись подкаталог
+  QColor GetColorForState(CFile::STATE state);///<получить цвет для состояния
  private slots:
   void on_qPushButton_Streamer_Eject_clicked();///<выгрузить кассету
   void on_qPushButton_Streamer_Load_clicked();///<загрузить кассету
