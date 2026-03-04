@@ -95,8 +95,9 @@ class CMainWindow:public QMainWindow
   void on_qPushButton_Settings_SaveSettings_clicked();///<сохранить и применить настройки
   void on_qPushButton_Cassete_ClearCassete_clicked();///<очистить кассету  
   void on_qPushButton_WriteToCassete_clicked();///<записать каталог на кассету
+  void on_qPushButton_WriteToCasseteSequenceFiles_clicked();///<записать каталог на кассету серией файлов
   void on_qPushButton_ReadFromCassete_clicked();///<считать каталог с кассеты
-  void on_qPushButton_Compare_clicked();///<сравнение каталогов на кассете
+  void on_qPushButton_Compare_clicked();///<сравнение каталогов на кассете  
 };
 
 #endif

@@ -265,6 +265,90 @@ void CMainWindow::on_qPushButton_WriteToCassete_clicked()
  AddRecordToCassete(std_path_name);
 }
 //----------------------------------------------------------------------------------------------------
+//!записать каталог на кассету серией файлов
+//----------------------------------------------------------------------------------------------------
+void CMainWindow::on_qPushButton_WriteToCasseteSequenceFiles_clicked()
+{
+ {
+  QMessageBox *qMessageBox=new QMessageBox(QMessageBox::Question,"Сообщение","Внимание! Будет создано множество отдельных файлов на ленте. Читать их придётся последовательно. Перемотка к выбранной записи в этой программе работать корректно не будет! Продолжить?",QMessageBox::Yes|QMessageBox::No);
+  int reply=qMessageBox->exec();
+  delete(qMessageBox);
+  if (reply!=QMessageBox::Yes) return;
+ }
+
+ QString path_name=QFileDialog::getExistingDirectory(this,tr("Укажите записываемый каталог"),"");
+ if (path_name.isEmpty()) return;
+ std::string std_path_name=path_name.toStdString();
+ //определяем имя внутреннего каталога
+ size_t length=std_path_name.length();
+ size_t pos=0;
+ for(size_t n=length-1;n>0;n--)
+ {
+  if (std_path_name[n]==SYSTEM::GetPathDivider()[0]) break;
+  pos=n;
+ }
+ std::string record_path_name=std_path_name.substr(pos,length-pos);
+ std::string std_current_path_name=std_path_name.substr(0,pos);
+ //меняем каталог
+ if (std_current_path_name.length()==0) std_current_path_name=SYSTEM::GetPathDivider();
+ if (chdir(std_current_path_name.c_str())<0)
+ {
+  QMessageBox *qMessageBox=new QMessageBox(QMessageBox::Information,"Ошибка!","Не могу сменить каталог на выбранный!",QMessageBox::Yes);
+  qMessageBox->exec();
+  delete(qMessageBox);
+  return;
+ }
+ //сканируем каталог
+ CRecord cRecord;
+ CreateRecord(std_path_name,cRecord);
+ //обходим список каталогов и вызываем запись
+ struct SVisit
+ {
+  const CRecord *cRecord_Ptr;
+  SVisit(const CRecord* cRecord_Ptr_Set=NULL)
+  {
+   cRecord_Ptr=cRecord_Ptr_Set;
+  }
+ };
+
+ std::deque<SVisit> deque_list;
+ deque_list.push_front(SVisit(&cRecord));
+ while(deque_list.empty()==false)
+ {
+  SVisit sVisit=deque_list[0];
+  deque_list.pop_front();
+  if (sVisit.cRecord_Ptr==NULL) continue;
+  //добавляем директории
+  for(size_t n=0;n<sVisit.cRecord_Ptr->RecordList.size();n++)
+  {
+   SVisit sVisit_New;
+   sVisit_New.cRecord_Ptr=&sVisit.cRecord_Ptr->RecordList[n];
+   deque_list.push_front(sVisit_New);
+  }
+  //добавляем элементы директории и вызываем запись
+  for(size_t n=0;n<sVisit.cRecord_Ptr->FileList.size();n++)
+  {
+   const CFile &cFile=sVisit.cRecord_Ptr->FileList[n];
+   std::string file_name=cFile.FullFileName;
+   if (cStreamer.WriteToCassete(file_name)==false)
+   {
+    QMessageBox *qMessageBox=new QMessageBox(QMessageBox::Information,"Ошибка!","Сбой при записи данных на кассету!",QMessageBox::Yes);
+    qMessageBox->exec();
+    delete(qMessageBox);
+    return;
+   }
+  }
+ }
+
+ QMessageBox *qMessageBox=new QMessageBox(QMessageBox::Question,"Сообщение","Добавить записанный каталог в список записей на кассете?",QMessageBox::Yes|QMessageBox::No);
+ int reply=qMessageBox->exec();
+ delete(qMessageBox);
+ if (reply!=QMessageBox::Yes) return;
+
+ AddRecordToCassete(std_path_name);
+}
+
+//----------------------------------------------------------------------------------------------------
 //!считать каталог с кассеты
 //----------------------------------------------------------------------------------------------------
 void CMainWindow::on_qPushButton_ReadFromCassete_clicked()
@@ -865,6 +949,8 @@ QColor CMainWindow::GetColorForState(CFile::STATE state)
 //****************************************************************************************************
 //открытые функции
 //****************************************************************************************************
+
+
 
 
 

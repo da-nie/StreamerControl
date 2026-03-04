@@ -25,30 +25,25 @@
         <string>Кассета</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Для работы программы требуется установить пакеты mt-st и mtx : sudo apt-get install mt-st [ENTER] и sudo apt-get install mtx [ENTER].</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout">
-          <item row="2" column="1">
-           <widget class="QPushButton" name="qPushButton_Cassete_SaveCassete">
-            <property name="text">
-             <string>Сохранить файл каталогов кассеты</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QPushButton" name="qPushButton_Cassete_AddRecordToCassete">
-            <property name="text">
-             <string>Добавить архив в файл каталога кассеты</string>
-            </property>
+          <item row="9" column="1">
+           <widget class="QTreeWidget" name="qTreeWidget_Cassete_Record">
+            <column>
+             <property name="text">
+              <string>Файл</string>
+             </property>
+            </column>
            </widget>
           </item>
           <item row="10" column="0">
-           <widget class="QPushButton" name="qPushButton_Cassete_DeleteSelectedRecord">
-            <property name="text">
-             <string>Удалить выбранную запись</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
            <widget class="QLabel" name="qLabel_Cassete_CasseteSize">
             <property name="frameShape">
              <enum>QFrame::Panel</enum>
@@ -61,14 +56,27 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="qPushButton_Cassete_OpenCassete">
+          <item row="11" column="0">
+           <widget class="QPushButton" name="qPushButton_Cassete_DeleteSelectedRecord">
             <property name="text">
-             <string>Открыть файл каталога кассеты</string>
+             <string>Удалить выбранную запись</string>
             </property>
            </widget>
           </item>
-          <item row="8" column="0">
+          <item row="11" column="1">
+           <widget class="QLabel" name="qLabel_CasseteText">
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="text">
+             <string>1 МБ=1000 000 байт. Объём без учёта данных tar и сжатия.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
            <widget class="QTableWidget" name="qTableWidget_Cassete_Cassete">
             <property name="editTriggers">
              <set>QAbstractItemView::NoEditTriggers</set>
@@ -93,19 +101,6 @@
            </widget>
           </item>
           <item row="10" column="1">
-           <widget class="QLabel" name="qLabel_CasseteText">
-            <property name="frameShape">
-             <enum>QFrame::Panel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <property name="text">
-             <string>1 МБ=1000 000 байт. Объём без учёта данных tar и сжатия.</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
            <widget class="QLabel" name="qLabel_Cassete_RecordSize">
             <property name="frameShape">
              <enum>QFrame::Panel</enum>
@@ -118,81 +113,7 @@
             </property>
            </widget>
           </item>
-          <item row="8" column="1">
-           <widget class="QTreeWidget" name="qTreeWidget_Cassete_Record">
-            <column>
-             <property name="text">
-              <string>Файл</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QPushButton" name="qPushButton_Cassete_ClearCassete">
-            <property name="text">
-             <string>Очистить каталог кассеты</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="qPushButton_MoveTo">
-            <property name="text">
-             <string>Перемотать к выбранной записи на кассете</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="qPushButton_Compare">
-            <property name="text">
-             <string>Сравнить файлы выбранного каталога кассеты с файлами на диске</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QPushButton" name="qPushButton_WriteToCassete">
-            <property name="text">
-             <string>Записать каталог на кассету</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QPushButton" name="qPushButton_ReadFromCassete">
-            <property name="text">
-             <string>Считать каталог с кассеты</string>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QLabel" name="qLabel_DirerctoryNotEquivalent">
-              <property name="frameShape">
-               <enum>QFrame::WinPanel</enum>
-              </property>
-              <property name="text">
-               <string>Каталоги различны</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="qLabel_LengthError">
-              <property name="frameShape">
-               <enum>QFrame::WinPanel</enum>
-              </property>
-              <property name="text">
-               <string>Отличается размер файла</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="11" column="1">
+          <item row="12" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
              <widget class="QLabel" name="qLabel_OnlyInRecord">
@@ -225,14 +146,131 @@
             </item>
            </layout>
           </item>
+          <item row="12" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="qLabel_DirerctoryNotEquivalent">
+              <property name="frameShape">
+               <enum>QFrame::WinPanel</enum>
+              </property>
+              <property name="text">
+               <string>Каталоги различны</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="qLabel_LengthError">
+              <property name="frameShape">
+               <enum>QFrame::WinPanel</enum>
+              </property>
+              <property name="text">
+               <string>Отличается размер файла</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Каталоги кассеты</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_12">
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_11"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="qPushButton_Cassete_AddRecordToCassete">
+               <property name="text">
+                <string>Добавить архив в файл каталога кассеты</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="qPushButton_Cassete_ClearCassete">
+               <property name="text">
+                <string>Очистить каталог кассеты</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="qPushButton_Cassete_OpenCassete">
+               <property name="text">
+                <string>Открыть файл каталога кассеты</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="qPushButton_Cassete_SaveCassete">
+               <property name="text">
+                <string>Сохранить файл каталогов кассеты</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QPushButton" name="qPushButton_Compare">
+               <property name="text">
+                <string>Сравнить файлы выбранного каталога кассеты с файлами на диске</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>Запись/чтение данных </string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_14">
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_13">
+               <item row="1" column="0">
+                <widget class="QPushButton" name="qPushButton_WriteToCassete">
+                 <property name="text">
+                  <string>Записать каталог на кассету в одном архиве</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="qPushButton_ReadFromCassete">
+                 <property name="text">
+                  <string>Считать каталог с кассеты</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="qPushButton_MoveTo">
+                 <property name="text">
+                  <string>Перемотать к выбранной записи на кассете</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="qPushButton_WriteToCasseteSequenceFiles">
+                 <property name="text">
+                  <string>Записать каталог на кассету отдельными файлами</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Для работы программы требуется установить пакеты mt-st и mtx : sudo apt-get install mt-st [ENTER] и sudo apt-get install mtx [ENTER].</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </widget>
